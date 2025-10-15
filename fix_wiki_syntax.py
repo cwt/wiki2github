@@ -150,13 +150,22 @@ def load_known_pages_mapping(mapping_file="mapping.toml"):
     If the file doesn't exist, return an empty dictionary.
     """
     if os.path.exists(mapping_file):
-        with open(mapping_file, "r", encoding="utf-8") as f:
+        # For Python 3.11+ with tomllib, we need to open in binary mode
+        with open(mapping_file, "rb") as f:
             data = tomllib.load(f)
 
         # Convert TOML data to the expected format (None for None values)
         known_pages = {}
         for key, value in data.items():
-            known_pages[key] = value
+            # Handle both formats: simple key-value pairs and table format (key.dest)
+            if isinstance(value, dict) and "dest" in value:
+                # Table format: ["Page Name"].dest = "destination"
+                known_pages[key] = (
+                    value["dest"] if value["dest"] != "null" else None
+                )
+            else:
+                # Simple key-value format: ["Page Name"] = "destination"
+                known_pages[key] = value if value != "null" else None
         return known_pages
     else:
         # Return empty mapping if file doesn't exist
@@ -346,15 +355,31 @@ def main():
     """
     Main function to process all markdown files in the current directory
     """
-    import sys
+    import argparse
 
-    if len(sys.argv) > 1:
-        # Process specific file
-        process_file(sys.argv[1])
+    parser = argparse.ArgumentParser(
+        description="Convert MediaWiki syntax to GitHub-flavored markdown"
+    )
+    parser.add_argument("files", nargs="*", help="Markdown files to process")
+    parser.add_argument(
+        "-m",
+        "--mapping",
+        default="mapping.toml",
+        help="Path to the mapping TOML file (default: mapping.toml)",
+    )
+
+    args = parser.parse_args()
+
+    mapping_file = args.mapping
+
+    if args.files:
+        # Process specific files
+        for file_path in args.files:
+            process_file(file_path, mapping_file)
     else:
         # Process all markdown files in the directory
         for file in get_markdown_files():
-            process_file(file)
+            process_file(file, mapping_file)
 
 
 if __name__ == "__main__":

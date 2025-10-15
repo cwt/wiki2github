@@ -25,6 +25,18 @@ This script converts MediaWiki syntax to GitHub-flavored markdown, specifically 
 python fix_wiki_syntax.py path/to/your/file.md
 ```
 
+### Convert multiple files:
+
+```bash
+python fix_wiki_syntax.py file1.md file2.md file3.md
+```
+
+### Convert files with a custom mapping file:
+
+```bash
+python fix_wiki_syntax.py -m path/to/your/mapping.toml file1.md file2.md
+```
+
 ### Convert all markdown files in the current directory:
 
 ```bash
@@ -33,11 +45,21 @@ python fix_wiki_syntax.py
 
 ## Configuration
 
-The script looks for a `mapping.toml` file in the same directory to map specific wiki page names to GitHub wiki file names. The format is:
+The script looks for a `mapping.toml` file in the same directory to map specific wiki page names to GitHub wiki file names. The script supports two TOML formats:
 
+**Format 1 - Simple key-value pairs:**
 ```toml
 ["Wiki Page Name"] = "filename"     # For existing pages (no .md extension needed)
 ["Another Page"] = null             # For pages that don't exist (creates edit link)
+```
+
+**Format 2 - Table format:**
+```toml
+["Wiki Page Name"]
+dest = "filename"
+
+["Another Page"]
+dest = "null"                       # For pages that don't exist (creates edit link)
 ```
 
 Example mapping.toml:
@@ -47,7 +69,21 @@ Example mapping.toml:
 ["NonExistentPage"] = null
 ```
 
+Or using the table format:
+```toml
+["User:Example/Hints"]
+dest = "hints"
+
+["User:Example/FAQ"]
+dest = "faq"
+
+["NonExistentPage"]
+dest = "null"
+```
+
 If no `mapping.toml` file exists, all wiki links will be converted using a simple transformation (spaces replaced with hyphens).
+
+You can specify a custom mapping file using the `-m` or `--mapping` command-line option.
 
 ## Customization
 
