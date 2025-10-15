@@ -219,15 +219,9 @@ def fix_wiki_syntax(content):
                 # so GitHub can direct to edit mode - but without .md extension
                 return f'[{display_text}]({file_name})'
         else:
-            # For other pages, check if file exists in the wiki directory
-            # Convert wiki page name to potential file name, but without .md extension for GitHub
-            file_name_with_ext = file_name + ".md"
-            if file_name_with_ext in os.listdir('.'):
-                # File exists, use without .md for GitHub
-                return f'[{display_text}]({file_name})'
-            else:
-                # File doesn't exist, preserve link for GitHub to create - without .md extension
-                return f'[{display_text}]({file_name})'
+            # For other pages, preserve the link for GitHub to create - without .md extension
+            # GitHub will show an edit page if the page doesn't exist
+            return f'[{display_text}]({file_name})'
     
     # Apply the replacement for wiki links - exclude external links in [text](url) format
     # This regex matches [[text]] but not [text](url) patterns
