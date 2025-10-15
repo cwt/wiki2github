@@ -63,3 +63,6 @@ dest = "A-list-of-Slash'EM-Extended's-new-races"
 
 ["Public_server"]
 dest = "null"  # Could be server
+
+["SlashTHEM Extended"]
+dest = "SlashTHEM-Extended"

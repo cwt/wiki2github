@@ -199,13 +199,6 @@ def fix_wiki_syntax(content, mapping_file="mapping.toml"):
     content = re.sub(r"\[\[Image:[^\]]+\]\]", "", content)
     content = re.sub(r"\[\[File:[^\]]+\]\]", "", content)
 
-    # Special case for SlashTHEM Extended which exists as a page
-    content = re.sub(
-        r"\[\[SlashTHEM Extended\|SlashTHEM Extended\]\]",
-        "[SlashTHEM Extended](SlashTHEM-Extended.md)",
-        content,
-    )
-
     def convert_wiki_link_to_markdown(match):
         """
         Convert wiki link syntax [[Page|Display Text]] to markdown [Display Text](Page)
