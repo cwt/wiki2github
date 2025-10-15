@@ -1,0 +1,65 @@
+# Mapping of wiki page names to GitHub wiki file names
+# Use 'null' or omit entries for pages that don't have corresponding files
+
+["User:Bluescreenofdeath/Hints"]
+dest = "A-list-of-hints"
+
+["User:Bluescreenofdeath/FAQ"]
+dest = "FAQ"
+
+["User:Bluescreenofdeath/Options_and_Hotkeys"]
+dest = "Options,-hotkeys-and-commands"
+
+["User:Bluescreenofdeath/Version_history"]
+dest = "A-rudimentary-version-history"
+
+["User:Bluescreenofdeath/Skills"]
+dest = "Skills-in-Slash'EM-Extended"
+
+["User:Bluescreenofdeath/Techniques"]
+dest = "Techniques-in-Slash'EM-Extended"
+
+["User:Bluescreenofdeath/Dungeon_option"]
+dest = "Dungeon-option-templates"
+
+["User:Bluescreenofdeath/Appearance_aptness"]
+dest = "Appearance-aptnesses"
+
+["User:Bluescreenofdeath/Branches"]
+dest = "Dungeon-overview"
+
+["User:Bluescreenofdeath/Materials"]
+dest = "Item-materials"
+
+["User:Bluescreenofdeath/Egotypes"]
+dest = "Monster-and-item-egotypes"
+
+["User:Bluescreenofdeath/Sinks_and_toilets"]
+dest = "Identifying-rings-and-amulets"
+
+["User:Bluescreenofdeath/Evil_Variant"]
+dest = "The-Evil-Variant"
+
+["User:Bluescreenofdeath/Friday_the_13th"]
+dest = "Friday-the-13th"
+
+["User:Bluescreenofdeath/Known_Bugs"]
+dest = "null"  # No corresponding page
+
+["Item_(Slash%27EM_Extended)"]
+dest = "null"  # No corresponding page
+
+["Monster_(Slash%27EM_Extended)"]
+dest = "null"  # No corresponding page
+
+["Trap_(Slash%27EM_Extended)"]
+dest = "A-list-of-Slash'EM-Extended's-new-traps"
+
+["Role difficulty/Variants#Slash.27EM_Extended_roles"]
+dest = "A-list-of-Slash'EM-Extended's-new-roles"
+
+["Race/Slash'EM_Extended"]
+dest = "A-list-of-Slash'EM-Extended's-new-races"
+
+["Public_server"]
+dest = "null"  # Could be server

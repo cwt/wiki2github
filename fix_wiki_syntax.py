@@ -6,6 +6,12 @@ Script to fix incompatible Wiki syntax in GitHub Wiki files
 import re
 import os
 
+# Use toml from standard library for Python 3.11+, fallback to external library for older versions
+try:
+    import tomllib  # Python 3.11+
+except ImportError:
+    import toml as tomllib  # External library as fallback
+
 
 def convert_wiki_table_to_markdown(table_content):
     """
@@ -138,10 +144,31 @@ def extract_template_content(match):
     return f"**Note:** {content}"
 
 
-def fix_wiki_syntax(content):
+def load_known_pages_mapping(mapping_file="mapping.toml"):
+    """
+    Load the known pages mapping from a TOML file.
+    If the file doesn't exist, return an empty dictionary.
+    """
+    if os.path.exists(mapping_file):
+        with open(mapping_file, "r", encoding="utf-8") as f:
+            data = tomllib.load(f)
+
+        # Convert TOML data to the expected format (None for None values)
+        known_pages = {}
+        for key, value in data.items():
+            known_pages[key] = value
+        return known_pages
+    else:
+        # Return empty mapping if file doesn't exist
+        return {}
+
+
+def fix_wiki_syntax(content, mapping_file="mapping.toml"):
     """
     Fix various incompatible Wiki syntax patterns in the content
     """
+    # Load known pages mapping from external file
+    known_pages = load_known_pages_mapping(mapping_file)
 
     # Fix heading syntax first (e.g., == Heading == becomes ## Heading ##)
     # Match == Heading ==, === Heading ===, etc.
@@ -162,31 +189,6 @@ def fix_wiki_syntax(content):
     # Fix image links (remove [[Image:...|thumb|...]] syntax)
     content = re.sub(r"\[\[Image:[^\]]+\]\]", "", content)
     content = re.sub(r"\[\[File:[^\]]+\]\]", "", content)
-
-    # Define known wiki pages mapping
-    known_pages = {
-        "User:Bluescreenofdeath/Hints": "A-list-of-hints.md",
-        "User:Bluescreenofdeath/FAQ": "FAQ.md",
-        "User:Bluescreenofdeath/Options_and_Hotkeys": "Options,-hotkeys-and-commands.md",
-        "User:Bluescreenofdeath/Version_history": "A-rudimentary-version-history.md",
-        "User:Bluescreenofdeath/Skills": "Skills-in-Slash'EM-Extended.md",
-        "User:Bluescreenofdeath/Techniques": "Techniques-in-Slash'EM-Extended.md",
-        "User:Bluescreenofdeath/Dungeon_option": "Dungeon-option-templates.md",
-        "User:Bluescreenofdeath/Appearance_aptness": "Appearance-aptnesses.md",
-        "User:Bluescreenofdeath/Branches": "Dungeon-overview.md",
-        "User:Bluescreenofdeath/Materials": "Item-materials.md",
-        "User:Bluescreenofdeath/Egotypes": "Monster-and-item-egotypes.md",
-        "User:Bluescreenofdeath/Sinks_and_toilets": "Identifying-rings-and-amulets.md",
-        "User:Bluescreenofdeath/Evil_Variant": "The-Evil-Variant.md",
-        "User:Bluescreenofdeath/Friday_the_13th": "Friday-the-13th.md",
-        "User:Bluescreenofdeath/Known_Bugs": None,  # No corresponding page
-        "Item_(Slash%27EM_Extended)": None,  # No corresponding page
-        "Monster_(Slash%27EM_Extended)": None,  # No corresponding page
-        "Trap_(Slash%27EM_Extended)": "A-list-of-Slash'EM-Extended's-new-traps.md",
-        "Role difficulty/Variants#Slash.27EM_Extended_roles": "A-list-of-Slash'EM-Extended's-new-roles.md",
-        "Race/Slash'EM_Extended": "A-list-of-Slash'EM-Extended's-new-races.md",
-        "Public_server": None,  # Could be server
-    }
 
     # Special case for SlashTHEM Extended which exists as a page
     content = re.sub(
@@ -309,7 +311,7 @@ def fix_wiki_syntax(content):
     return content.strip()
 
 
-def process_file(file_path):
+def process_file(file_path, mapping_file="mapping.toml"):
     """
     Process a single file to fix wiki syntax
     """
@@ -319,7 +321,7 @@ def process_file(file_path):
         content = f.read()
 
     original_content = content
-    new_content = fix_wiki_syntax(content)
+    new_content = fix_wiki_syntax(content, mapping_file)
 
     if original_content != new_content:
         with open(file_path, "w", encoding="utf-8") as f:
